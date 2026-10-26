@@ -3,6 +3,9 @@
 # - Pushing to main publishes any version folder under releases/ whose tag already exists
 #   but has no Release yet, so releases appear without having to re-push a tag.
 # Each version needs its files under releases/<tag>/ and a "## <tag>" section in CHANGELOG.md.
+# If the repository secret RELEASE_TOKEN holds a personal access token (Contents: read and
+# write on this repo), releases are posted as that token's owner. Otherwise they're posted by
+# github-actions[bot].
 name: Publish release
 
 on:
@@ -21,7 +24,7 @@ jobs:
 
       - name: Publish releases
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || github.token }}
         run: |
           publish() {
             tag="$1"; dir="releases/$tag"
