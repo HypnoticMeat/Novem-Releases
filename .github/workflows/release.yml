@@ -1,0 +1,48 @@
+# Publishes a GitHub Release for each version.
+# - Pushing a version tag (v0.12, v0.13, ...) publishes that version.
+# - Pushing to main publishes any version folder under releases/ whose tag already exists
+#   but has no Release yet, so releases appear without having to re-push a tag.
+# Each version needs its files under releases/<tag>/ and a "## <tag>" section in CHANGELOG.md.
+name: Publish release
+
+on:
+  push:
+    tags: ['v*']
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Publish releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          publish() {
+            tag="$1"; dir="releases/$tag"
+            files=$(ls "$dir"/*.zip "$dir"/README-Testers.txt 2>/dev/null)
+            if [ -z "$files" ]; then echo "No release files in $dir, skipping $tag"; return; fi
+            awk -v h="## $tag" '$0 == h { f = 1; next } f && /^## / { exit } f { print }' CHANGELOG.md > notes.md
+            [ -s notes.md ] || echo "Playtest build $tag." > notes.md
+            if gh release view "$tag" >/dev/null 2>&1; then
+              gh release upload "$tag" $files --clobber
+              gh release edit "$tag" --notes-file notes.md
+            else
+              gh release create "$tag" $files --verify-tag --title "Novem Dungeon Player $tag" --notes-file notes.md
+            fi
+          }
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            publish "$GITHUB_REF_NAME"
+          else
+            for dir in releases/v*/; do
+              tag=$(basename "$dir")
+              if ! git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null; then echo "No tag $tag yet, skipping"; continue; fi
+              if gh release view "$tag" >/dev/null 2>&1; then echo "$tag already released"; continue; fi
+              publish "$tag"
+            done
+          fi

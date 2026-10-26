@@ -19,4 +19,4 @@ See [README-Testers.txt](releases/v0.12/README-Testers.txt) for controls, and [C
 |---|---|---|---|
 | v0.12 | [NovemPlayer-v0.12.zip](releases/v0.12/NovemPlayer-v0.12.zip) | 5 (Easy to Fiendish) | Hold the line + All standing |
 
-Each release is also marked with a git tag of the same name.
+Each release has a git tag of the same name and a page on the [Releases](https://github.com/HypnoticMeat/Novem-Releases/releases) tab. Release pages are published automatically when a version tag or its files are pushed (see `.github/workflows/release.yml`).
