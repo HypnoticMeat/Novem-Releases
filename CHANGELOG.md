@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.12.2
+
+A playtest of a trial Cleric rule. The standard v0.12 rules are unchanged.
+
+**Trial rule: Consecrate**
+- In puzzles marked **Consecrate**, the Cleric must stand **within reach** of at least two floor tiles, one of them the room's **lowest** floor tile.
+  - The lowest floor tile is the smallest digit in the room that isn't an adventurer, the monster or the treasure.
+- The rule appears in the Cleric's **Must** box on the Party tab, and only on Consecrate puzzles.
+
+**Puzzles**
+- Five new Consecrate puzzles, novem-86 to novem-90, one each from Easy to Fiendish.
+- The five v0.12 puzzles (novem-81 to novem-85) are still included for comparison.
+
+**Feedback wanted**
+- Did Consecrate make placing the Cleric matter, and was it fun to work out?
+
 ## v0.12.1
 
 A player update. The rules and puzzles are unchanged from v0.12.
